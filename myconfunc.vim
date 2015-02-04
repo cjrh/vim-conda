@@ -57,7 +57,11 @@ endif
 
 function! CondaActivate(envname, envpath)
     let $CONDA_DEFAULT_ENV = a:envname
-    let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
+    if has("win32") || has("win64")
+        let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
+    elseif has("unix")
+        let $PATH = a:envpath . '/bin' .  ':' . g:conda_plain_path
+    endif
 endfunction
 
 
