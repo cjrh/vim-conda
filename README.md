@@ -1,6 +1,8 @@
 # vim-conda
 Conda integration in the Vim editor
 
+**This plugin is currently in alpha. Unless you like the bleeding edge you should hold off until beta.**
+
 This plugin provides the following functions:
 ```
 CondaChangeEnv()
