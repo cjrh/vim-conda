@@ -3,6 +3,7 @@ function! Cmtest(A,L,P)
     return g:condaenvs
 endfunction
 
+
 set wildcharm=<Tab>
 
 function! Showcm()
@@ -33,6 +34,7 @@ EOF
 return l:temppath
 endfunction
 
+
 " Setting global paths - We use these to switch between conda envs.
 if exists("$CONDA_DEFAULT_ENV")
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
@@ -40,25 +42,30 @@ else
     let g:conda_startup_env = ""
 end
 
+
 if !exists("g:conda_plain_path")
     " If vim is started from inside a conda path, this variable will
     " contain the path WITHOUT the extra conda env bits.
     let g:conda_plain_path = SetCondaPlainPath()
 endif
 
+
 if !exists("g:conda_startup_path")
     let g:conda_startup_path = $PATH
 endif
+
 
 function! CondaActivate(envname, envpath)
     let $CONDA_DEFAULT_ENV = a:envname
     let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
 endfunction
 
+
 function! CondaDeactivate()
     let $CONDA_DEFAULT_ENV = g:conda_startup_env
     let $PATH = g:conda_startup_path
 endfunction
+
 
 function! CondaChangeEnv()
 python << EOF
