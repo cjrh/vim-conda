@@ -130,4 +130,9 @@ else:
 EOF
 endfunction
 
-
+" ISSUES
+" http://stackoverflow.com/questions/13402899/why-does-my-vim-command-line-path-differ-from-my-shell-path
+" THERE ARE OTHER ISSUES..SHELLS MUST MATCH
+" https://github.com/gmarik/Vundle.vim/issues/510
+"
+"
