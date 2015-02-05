@@ -217,5 +217,8 @@ command! CondaChangeEnv call s:CondaChangeEnv()
 " http://stackoverflow.com/questions/13402899/why-does-my-vim-command-line-path-differ-from-my-shell-path
 " THERE ARE OTHER ISSUES..SHELLS MUST MATCH
 " https://github.com/gmarik/Vundle.vim/issues/510
-"
+" https://github.com/davidhalter/jedi-vim/issues/280
+" https://github.com/davidhalter/jedi/issues/385
+" https://github.com/davidhalter/jedi-vim/issues/196
+" 
 "
