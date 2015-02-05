@@ -1,5 +1,6 @@
 # vim-conda
-Conda integration in the Vim editor
+
+This is a [Vim](http://www.vim.org/) plugin to support [Python](https://www.python.org/) development using the [Conda](http://conda.pydata.org/docs/) environment manager.
 
 **This plugin is currently in alpha. Unless you like the bleeding edge you should hold off using this until beta.**
 
