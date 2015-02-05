@@ -1,8 +1,11 @@
+**This plugin is currently in ALPHA. Unless you like the bleeding edge you should hold off using this until beta.**
+
+---
+
 # vim-conda
 
 This is a [Vim](http://www.vim.org/) plugin to support [Python](https://www.python.org/) development using the [Conda](http://conda.pydata.org/docs/) environment manager.
 
-**This plugin is currently in alpha. Unless you like the bleeding edge you should hold off using this until beta.**
 
 Install
 -------
