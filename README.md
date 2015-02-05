@@ -45,7 +45,7 @@ The Vim editor can be used to develop Python code. One popular workflow is to ed
 ```
 (where `%` will be expanded to the name of the current file). Which `python` will run? Why, the one in the system path of course! But what happens if there is more than one Python executable in the system path? The *first one* to be found will be the one that runs.
 
-This forms the basis of how *virtual environments* work.  The Conda tool is an environment manager for Python; it also supports package management as part of its feature set, but we are not concerned with that here.  Conda allows the user to create multiple, separate Python installations, and switch between them on the command line. It becomes very easy to test code on multiple Python versions, and manage environments that are completely separated from each other.
+This forms the basis of how *virtual environments* work.  The Conda tool is an environment manager for Python; it also supports package management as part of its feature set, but we are not concerned with that here.  Conda allows the user to create multiple, separate Python installations, and switch between them on the command line. It does this by modifying the `$PATH` (or `PATH` on Windows) environment variable.
 
 `vim-conda` makes it easy to perform **switching** environments right from inside Vim.  Now you never have to leave, so the [>300 upvoted question on StackOverflow on "how to quit"](http://stackoverflow.com/questions/11828270/how-to-exit-the-vim-editor) need no longer concern you ;)
 
@@ -58,7 +58,9 @@ You can map it to a key (e.g. in your `vimrc` file) like so:
 map <F4> :CondaChangeEnv<CR>
 ```
 
-In the list of envs, you will see `root` as an option if you had previously changed to a non-root env. Selecting `root` is the same as doing a `deactivate` in the sense that all the changes made previously are rolled back.
+When the command is executed, a `wildmenu` will appear showing the currently available Conda environments on your system. By selection one, the changes to `$PATH` and the embedded-python `sys.path` are made. (*Unfortunately, the key for triggering `wildmode` and moving through the wildmenu is hard-coded to `<Tab>`; I still haven't learned enough vimscript to figure out how to use a user setting.*)
+
+In the list of envs, you will also see `root` as an option if you had previously changed to a non-root env. Selecting `root` is the same as doing a `deactivate` in the sense that all the changes made previously are rolled back.
 
 Likewise, when you change from one environment to another, the change is clean in the sense that changes from the first env are reset, before changes for the new env are made.  Exactly as would happen on the command line.
 
