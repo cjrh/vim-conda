@@ -81,6 +81,7 @@ import subprocess
 import json
 import copy
 
+_conda_py_globals = dict(reset_sys_path=copy.copy(sys.path))  # Mutable global container
 
 def python_input(message = 'input'):
     vim.command('call inputsave()')
@@ -121,22 +122,22 @@ def conda_activate(env_name, env_path):
     new_paths = obtain_sys_path_from_env(env_path)
     # Insert the new paths into the EMBEDDED PYTHON sys.path.
     # This is what jedi-vim will use for code completion.
-    _reset_path = copy.copy(sys.path)  # Remember the unmodified one
-    # (There is another way we could do this: instead of a full reset, we could
+    # TODO: There is another way we could do this: instead of a full reset, we could
     # remember what got added, and the reset process could simply remove those
     # things; this approach would preserve any changes the user makes to 
-    # sys.path inbetween calls to s:CondaChangeEnv()... )
-    sys.path = new_paths + sys.path   # Modify sys.path for Jedi completion
+    # sys.path inbetween calls to s:CondaChangeEnv()... 
+    sys.path = new_paths + _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
     print 'Activated env: {}'.format(env_name)
 
 
 def conda_deactivate():
     """ This does the reset. """
-    print 'Running deactivate...'
     # Resets $PATH and $CONDA_DEFAULT_ENV
     vim.command('call s:CondaDeactivate()')
     # Resets sys.path (embedded Python)
-    sys.path = copy.copy(_reset_path)
+    _conda_py_globals['syspath'] = copy.copy(sys.path)  # Remember the unmodified one
+    sys.path = _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
+    print 'Conda env deactivated.'
 
 EOF
 endif
