@@ -10,7 +10,7 @@ This is a [Vim](http://www.vim.org/) plugin to support [Python](https://www.pyth
 Install
 -------
 
-[Vundle](https://github.com/gmarik/Vundle.vim) is the recommended way. Add this to the section in your `vimrc` file where all your plugin statments appear:
+[Vundle](https://github.com/gmarik/Vundle.vim) is the recommended way. Add this to the section in your `vimrc` file where all your plugin statements appear:
 ```
 Plugin 'cjrh/vim-conda'
 ```
