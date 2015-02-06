@@ -154,6 +154,11 @@ def conda_activate(env_name, env_path, envs_root):
     # remember what got added, and the reset process could simply remove those
     # things; this approach would preserve any changes the user makes to 
     # sys.path inbetween calls to s:CondaChangeEnv()... 
+    # TODO: I found out that not only does jedi-vim modify sys.path for
+    # handling VIRTUALENV (which is what we do here), but it also looks like
+    # there is a bug in that the same venv path can get added multiple times.
+    # So it looks like the best policy for now is to continue with the
+    # current design.
     sys.path = new_paths + _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
     print 'Activated env: {}'.format(env_name)
 
