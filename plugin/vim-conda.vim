@@ -147,7 +147,12 @@ def conda_activate(env_name, env_path, envs_root):
     # change the $PATH and $CONDA_DEFAULT_ENV vars
     vim.command("call s:CondaActivate('{}', '{}', '{}')".format(env_name, env_path, envs_root))
     # Obtain sys.path for the selected conda env
-    new_paths = obtain_sys_path_from_env(env_path)
+    # TODO: Perhaps make this flag a Vim option that users can set?
+    ADD_ONLY_SITE_PKGS = True
+    if ADD_ONLY_SITE_PKGS:
+        new_paths = [os.path.join(env_path, 'lib', 'site-packages')]
+    else:
+        new_paths = obtain_sys_path_from_env(env_path)
     # Insert the new paths into the EMBEDDED PYTHON sys.path.
     # This is what jedi-vim will use for code completion.
     # TODO: There is another way we could do this: instead of a full reset, we could
