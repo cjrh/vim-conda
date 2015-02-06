@@ -32,8 +32,6 @@ This plugin provides a command, `CondaChangeEnv`, that will
 Demo
 ----
 
-Apologies for my poor screencast skills, but I have only a small window of opportunity to get this done and I'm worried it might be a now-or-never type situation.
-
 ![gif screencast of plugin demo](https://github.com/cjrh/vim-conda/blob/master/demo.gif)
 
 Introduction
