@@ -13,6 +13,12 @@ python << EOF
 import os
 import subprocess
 import json
+# This is quite deceiving. `os.environ` loads only a single time,
+# when the os module is first loaded. With this embedded-vim
+# Python, that means only one time. If we want to have an 
+# up-to-date version of the environment, we'll have to use
+# Vim's $VAR variables and rather act on that.
+# TODO: Fix use of py getenv
 path = os.getenv('PATH')
 conda_default_env = os.getenv('CONDA_DEFAULT_ENV')
 if not conda_default_env:
