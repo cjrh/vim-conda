@@ -39,14 +39,25 @@ return l:temppath
 endfunction
 
 
-function! s:CondaActivate(envname, envpath)
+function! s:CondaActivate(envname, envpath, envsroot)
     " Set environment variables $PATH and $CONDA_DEFAULT_ENV
     let $CONDA_DEFAULT_ENV = a:envname
+    let $ANACONDA_ENVS = a:envsroot
     if has("win32") || has("win64")
         let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
     elseif has("unix")
         let $PATH = a:envpath . '/bin' .  ':' . g:conda_plain_path
     endif
+python << EOF
+import os
+import vim
+# It turns out that `os.environ` is loaded only once. Therefore it
+# doesn't see the changes we just made above to the vim process env,
+# and so we will need to set these
+os.environ['CONDA_DEFAULT_ENV'] = vim.eval('a:envname')
+os.environ['ANACONDA_ENVS'] = vim.eval('a:envsroot')
+os.environ['PATH'] = vim.eval('$PATH')
+EOF
 endfunction
 
 
@@ -57,6 +68,17 @@ function! s:CondaDeactivate()
     "       from inside a conda env..
     let $CONDA_DEFAULT_ENV = g:conda_startup_env
     let $PATH = g:conda_startup_path
+python << EOF
+import os
+import vim
+# It turns out that `os.environ` is loaded only once. Therefore it
+# doesn't see the changes we just made above to the vim process env,
+# and so we will need to update the embedded Python's version of
+# `os.environ` manually.
+del os.environ['CONDA_DEFAULT_ENV']
+del os.environ['ANACONDA_ENVS']
+os.environ['PATH'] = vim.eval('$PATH')
+EOF
 endfunction
 
 
@@ -112,7 +134,7 @@ def obtain_sys_path_from_env(env_path):
     return json.loads(syspath_output)
 
 
-def conda_activate(env_name, env_path):
+def conda_activate(env_name, env_path, envs_root):
     """ This function performs a complete (internal) conda env
     activation. There are two primary actions:
 
@@ -123,7 +145,7 @@ def conda_activate(env_name, env_path):
     :return: None """
     # This calls a vim function that will 
     # change the $PATH and $CONDA_DEFAULT_ENV vars
-    vim.command("call s:CondaActivate('{}', '{}')".format(env_name, env_path))
+    vim.command("call s:CondaActivate('{}', '{}', '{}')".format(env_name, env_path, envs_root))
     # Obtain sys.path for the selected conda env
     new_paths = obtain_sys_path_from_env(env_path)
     # Insert the new paths into the EMBEDDED PYTHON sys.path.
@@ -159,7 +181,10 @@ python << EOF
 conda_deactivate()  # Reset the env paths back to root
 # Re-activate. 
 conda_default_env = vim.eval('g:conda_startup_env')
-conda_activate(os.path.basename(conda_default_env), conda_default_env)
+conda_activate(
+    os.path.basename(conda_default_env), 
+    conda_default_env,
+    os.path.dirname(conda_default_env))
 EOF
 else
     let g:conda_startup_env = ""
@@ -207,7 +232,7 @@ vim.command('redraw')
 if choice == 'root':
     conda_deactivate()
 elif choice in envnames:
-    conda_activate(choice, envnames[choice])
+    conda_activate(choice, envnames[choice], os.path.dirname(envnames[choice]))
 elif len(choice) > 0:
     vim.command('echo "Selected env `{}` not found."'.format(choice))
 else:
