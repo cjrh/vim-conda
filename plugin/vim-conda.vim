@@ -27,7 +27,10 @@ else:
     # We appear to be inside a conda env already. We want the path
     # that we would have WITHOUT being in a conda env, e.g. what 
     # we'd get if `deactivate` was run.
-    output = subprocess.check_output('conda info --json', shell=True)
+    shell = os.environ['SHELL']
+    if len(shell) == 0:
+        shell = None
+    output = subprocess.check_output('conda info --json', shell=True, executable=shell)
     d = json.loads(output)
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
@@ -206,7 +209,11 @@ python << EOF
 
 # Obtain conda information. It's great they provide output in 
 # json format because it's a short trip to a dict.
-output = subprocess.check_output('conda info --json', shell=True)
+import os
+shell = os.environ['SHELL']
+if len(shell)==0:
+    shell = None
+output = subprocess.check_output('conda info --json', shell=True, executable=shell)
 d = json.loads(output)
 
 
