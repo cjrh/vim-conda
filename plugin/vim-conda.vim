@@ -28,7 +28,7 @@ else:
     # that we would have WITHOUT being in a conda env, e.g. what 
     # we'd get if `deactivate` was run.
     output = subprocess.check_output('conda info --json', 
-        shell=True, executable=get_env_shell())
+        shell=True, executable=os.getenv('SHELL'))
     d = json.loads(output)
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
@@ -111,20 +111,6 @@ import json
 import copy
 
 _conda_py_globals = dict(reset_sys_path=copy.copy(sys.path))  # Mutable global container
-
-
-def get_env_shell():
-    """ Gets the SHELL environment variable. If there isn't one, 
-    returns None. """
-    try:
-        shell = os.environ['SHELL']
-    except KeyError as error:
-        shell = None
-    else:
-        shell = shell.strip()
-        if len(shell) == 0:
-            shell = None
-    return shell
 
 
 def python_input(message = 'input'):
@@ -224,7 +210,8 @@ python << EOF
 # json format because it's a short trip to a dict.
 import os
 output = subprocess.check_output('conda info --json', 
-    shell=True, executable=get_env_shell())
+    shell=True, executable=os.getenv('SHELL'))
+
 d = json.loads(output)
 
 
