@@ -28,7 +28,13 @@ else:
     # that we would have WITHOUT being in a conda env, e.g. what 
     # we'd get if `deactivate` was run.
     output = subprocess.check_output('conda info --json', 
-        shell=True, executable=os.getenv('SHELL'))
+        shell=True, executable=os.getenv('SHELL'),
+        # Needed to avoid "WindowsEror: [Error 6] The handle is invalid"
+        # When launching gvim.exe from a CMD shell. (gvim from icon seems
+        # fine!?)
+        # See also: http://bugs.python.org/issue3905
+        # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     d = json.loads(output)
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
@@ -211,7 +217,8 @@ python << EOF
 import os
 import subprocess
 output = subprocess.check_output('conda info --json', 
-    shell=True, executable=os.getenv('SHELL'))
+    shell=True, executable=os.getenv('SHELL'),
+    stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
 d = json.loads(output)
 
