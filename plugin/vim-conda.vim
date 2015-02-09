@@ -193,11 +193,10 @@ python << EOF
 import os
 conda_deactivate()  # Reset the env paths back to root
 # Re-activate. 
-conda_default_env = vim.eval('g:conda_startup_env')
-conda_activate(
-    os.path.basename(conda_default_env), 
-    conda_default_env,
-    os.path.dirname(conda_default_env))
+envname = vim.eval('g:conda_startup_env')
+root = vim.eval('$ANACONDA_ENVS')
+envpath = os.path.join(root, envname)
+conda_activate(envname, envpath, root)
 EOF
 else
     let g:conda_startup_env = ""
