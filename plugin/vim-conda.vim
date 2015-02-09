@@ -190,6 +190,7 @@ if exists("$CONDA_DEFAULT_ENV")
     " the required changes internally.
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
 python << EOF
+import os
 conda_deactivate()  # Reset the env paths back to root
 # Re-activate. 
 conda_default_env = vim.eval('g:conda_startup_env')
@@ -209,6 +210,7 @@ python << EOF
 # Obtain conda information. It's great they provide output in 
 # json format because it's a short trip to a dict.
 import os
+import subprocess
 output = subprocess.check_output('conda info --json', 
     shell=True, executable=os.getenv('SHELL'))
 
