@@ -210,6 +210,10 @@ def conda_deactivate():
     # Resets sys.path (embedded Python)
     _conda_py_globals['syspath'] = copy.copy(sys.path)  # Remember the unmodified one
     sys.path = _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
+    # Re-apply the sys.path from the shell Python
+    # The system python path may not already be part of
+    # the embedded Python's sys.path. This fn will check.
+    insert_system_py_sitepath()
     print 'Conda env deactivated.'
 
 EOF
@@ -224,7 +228,10 @@ if exists("$CONDA_DEFAULT_ENV")
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
 python << EOF
 import os
-conda_deactivate()  # Reset the env paths back to root
+# Reset the env paths back to root
+# (This will also modify sys.path to include the site-packages
+# folder of the Python on the system $PATH)
+conda_deactivate()  
 # Re-activate. 
 envname = vim.eval('g:conda_startup_env')
 root = vim.eval('$ANACONDA_ENVS')
@@ -233,6 +240,9 @@ conda_activate(envname, envpath, root)
 EOF
 else
     let g:conda_startup_env = ""
+python << EOF
+insert_system_py_sitepath()
+EOF
 end
 
 
