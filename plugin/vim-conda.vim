@@ -7,6 +7,33 @@
 " need some help figure out how to make it user-defined.
 set wildcharm=<Tab>
 
+python << EOF
+# Global code for Python
+from os.path import join, dirname
+from subprocess import check_output
+
+def vim_conda_runshell(cmd):
+    return check_output(cmd, shell=True, executable=os.getenv('SHELL'))
+
+def vim_conda_runpyshell(cmd):
+    return check_output('python -c "{}"'.format(cmd), shell=True, 
+        executable=os.getenv('SHELL'))
+
+def insert_system_py_sitepath():
+    cmd = "import site, sys, os; sys.stdout.write(os.path.pathsep.join(site.getsitepackages()))"
+    sitedirs = vim_conda_runpyshell(cmd).split(os.path.pathsep)
+    # The following causes errors. Jedi vim imports e.g. hashlib
+    # from the stdlib, but it we've added a different stdlib to the
+    # embedded sys.path, jedi loads the wrong one, causing errs.
+    # Looks like we should only load site-packages.
+    # if len(sitedirs) > 0:
+    #     libdir = os.path.dirname(sitedirs[0])
+    #     if libdir not in sys.path:
+    #         sys.path.insert(0, libdir)
+    for sitedir in sitedirs:
+        if sitedir not in sys.path:
+            sys.path.insert(0, sitedir)
+EOF
 
 function! s:SetCondaPlainPath()
 python << EOF
