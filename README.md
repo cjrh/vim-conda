@@ -1,6 +1,3 @@
-**This plugin is currently in ALPHA. Unless you like the bleeding edge you should hold off using this until beta.**
-
----
 
 # vim-conda
 
