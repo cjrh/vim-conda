@@ -164,8 +164,9 @@ import vim
 # doesn't see the changes we just made above to the vim process env,
 # and so we will need to update the embedded Python's version of
 # `os.environ` manually.
-del os.environ['CONDA_DEFAULT_ENV']
 del os.environ['ANACONDA_ENVS']
+if 'CONDA_DEFAULT_ENV' in os.environ:
+    del os.environ['CONDA_DEFAULT_ENV']
 os.environ['PATH'] = vim.eval('$PATH')
 EOF
 endfunction
