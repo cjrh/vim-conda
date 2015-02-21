@@ -308,13 +308,9 @@ python << EOF
 # Obtain conda information. It's great they provide output in 
 # json format because it's a short trip to a dict.
 import os
-import subprocess
-output = subprocess.check_output('conda info --json', 
-    shell=True, executable=os.getenv('SHELL'),
-    stdin=subprocess.PIPE, stderr=subprocess.PIPE)
 
-d = json.loads(output)
 
+d = get_conda_info_dict()
 
 # We want to display the env names to the user, not the full paths, but
 # we need the full paths for things like $PATH modification and others.
