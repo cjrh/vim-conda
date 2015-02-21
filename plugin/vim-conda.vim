@@ -10,7 +10,8 @@ set wildcharm=<Tab>
 python << EOF
 # Global code for Python
 from os.path import join, dirname
-from subprocess import check_output
+from subprocess import check_output, PIPE
+import json
 
 def vim_conda_runshell(cmd):
     return check_output(cmd, shell=True, executable=os.getenv('SHELL'))
