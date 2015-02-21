@@ -27,6 +27,50 @@ def vim_conda_runpyshell(cmd):
     return check_output('python -c "{}"'.format(cmd), shell=True, 
         executable=os.getenv('SHELL'))
 
+
+def get_conda_info_dict():
+    """ Example output:
+    {
+      "channels": [
+        "http://repo.continuum.io/pkgs/free/osx-64/", 
+        "http://repo.continuum.io/pkgs/free/noarch/", 
+        "http://repo.continuum.io/pkgs/pro/osx-64/", 
+        "http://repo.continuum.io/pkgs/pro/noarch/"
+      ], 
+      "conda_build_version": "1.1.0", 
+      "conda_version": "3.9.0", 
+      "default_prefix": "/Users/calebhattingh/anaconda", 
+      "envs": [
+        "/Users/calebhattingh/anaconda/envs/django3", 
+        "/Users/calebhattingh/anaconda/envs/falcontest", 
+        "/Users/calebhattingh/anaconda/envs/misutesting", 
+        "/Users/calebhattingh/anaconda/envs/partito", 
+        "/Users/calebhattingh/anaconda/envs/py26", 
+        "/Users/calebhattingh/anaconda/envs/py27", 
+        "/Users/calebhattingh/anaconda/envs/py3", 
+        "/Users/calebhattingh/anaconda/envs/py34"
+      ], 
+      "envs_dirs": [
+        "/Users/calebhattingh/anaconda/envs"
+      ], 
+      "is_foreign": false, 
+      "pkgs_dirs": [
+        "/Users/calebhattingh/anaconda/pkgs"
+      ], 
+      "platform": "osx-64", 
+      "python_version": "2.7.9.final.0", 
+      "rc_path": null, 
+      "requests_version": "2.5.1", 
+      "root_prefix": "/Users/calebhattingh/anaconda", 
+      "root_writable": true, 
+      "sys_rc_path": "/Users/calebhattingh/anaconda/.condarc", 
+      "user_rc_path": "/Users/calebhattingh/.condarc"
+    }
+    """
+    output = vim_conda_runshell('conda info --json')
+    return json.loads(output)
+
+
 def insert_system_py_sitepath():
     """ Add the system $PATH Python's site-packages folders to the
     embedded Python's sys.path. This is for Jedi-vim code completion. """
