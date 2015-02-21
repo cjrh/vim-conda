@@ -110,7 +110,7 @@ else:
     # we'd get if `deactivate` was run.
     output = subprocess.check_output('conda info --json', 
         shell=True, executable=os.getenv('SHELL'),
-        # Needed to avoid "WindowsEror: [Error 6] The handle is invalid"
+        # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
         # When launching gvim.exe from a CMD shell. (gvim from icon seems
         # fine!?)
         # See also: http://bugs.python.org/issue3905
