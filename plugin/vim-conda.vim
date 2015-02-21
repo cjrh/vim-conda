@@ -131,7 +131,6 @@ endfunction
 function! s:CondaActivate(envname, envpath, envsroot)
     " Set environment variables $PATH and $CONDA_DEFAULT_ENV
     let $CONDA_DEFAULT_ENV = a:envname
-    let $ANACONDA_ENVS = a:envsroot
     if has("win32") || has("win64")
         let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
     elseif has("unix")
@@ -144,7 +143,6 @@ import vim
 # doesn't see the changes we just made above to the vim process env,
 # and so we will need to set these
 os.environ['CONDA_DEFAULT_ENV'] = vim.eval('a:envname')
-os.environ['ANACONDA_ENVS'] = vim.eval('a:envsroot')
 os.environ['PATH'] = vim.eval('$PATH')
 EOF
 endfunction
@@ -164,7 +162,6 @@ import vim
 # doesn't see the changes we just made above to the vim process env,
 # and so we will need to update the embedded Python's version of
 # `os.environ` manually.
-del os.environ['ANACONDA_ENVS']
 if 'CONDA_DEFAULT_ENV' in os.environ:
     del os.environ['CONDA_DEFAULT_ENV']
 os.environ['PATH'] = vim.eval('$PATH')
@@ -291,9 +288,22 @@ import os
 conda_deactivate()  
 # Re-activate. 
 envname = vim.eval('g:conda_startup_env')
-root = vim.eval('$ANACONDA_ENVS')
-envpath = os.path.join(root, envname)
-conda_activate(envname, envpath, root)
+# Need to get the root "envs" dir in order to build the
+# complete path the to env.
+d = get_conda_info_dict()
+roots = [os.path.dirname(x) for x in d['envs'] 
+            if envname == os.path.split(x)[-1]]
+
+if len(roots)>1:
+    print ('Found more than one matching env, '
+           'this should never happen.')
+elif len(roots)==0:
+    print ('Could not find a matching env in the list, '
+           'this should never happen.')
+else:
+    root = roots[0]
+    envpath = os.path.join(root, envname)
+    conda_activate(envname, envpath, root)
 EOF
 else
     let g:conda_startup_env = ""
