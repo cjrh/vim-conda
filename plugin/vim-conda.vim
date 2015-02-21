@@ -219,7 +219,8 @@ def obtain_sys_path_from_env(env_path):
     pyexe = os.path.join(env_path, 'python')
     args = ' -c "import sys, json; sys.stdout.write(json.dumps(sys.path))"'
     cmd = pyexe + args
-    syspath_output = subprocess.check_output(cmd, shell=True)
+    syspath_output = subprocess.check_output(cmd, shell=True,
+        executable=os.getenv('SHELL'))
     # Use json to convert the fetched sys.path cmdline output to a list
     return json.loads(syspath_output)
 
