@@ -14,7 +14,14 @@ from subprocess import check_output, PIPE
 import json
 
 def vim_conda_runshell(cmd):
-    return check_output(cmd, shell=True, executable=os.getenv('SHELL'))
+    return check_output(cmd, shell=True, executable=os.getenv('SHELL'),
+        # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
+        # When launching gvim.exe from a CMD shell. (gvim from icon seems
+        # fine!?)
+        # See also: http://bugs.python.org/issue3905
+        # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdin=PIPE, stderr=PIPE)
+
 
 def vim_conda_runpyshell(cmd):
     return check_output('python -c "{}"'.format(cmd), shell=True, 
