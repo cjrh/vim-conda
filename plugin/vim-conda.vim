@@ -120,7 +120,8 @@ else:
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
     # TODO Check whether the generator comprehension also works.
-    path = os.pathsep.join([x for x in path.split(os.pathsep) if d['default_prefix'] not in x])
+    path = os.pathsep.join([x for x in path.split(os.pathsep) 
+                                if d['default_prefix'] not in x])
 vim.command("let l:temppath = '" + path + "'")
 EOF
 return l:temppath
