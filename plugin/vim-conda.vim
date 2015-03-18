@@ -282,11 +282,6 @@ if exists("$CONDA_DEFAULT_ENV")
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
 python << EOF
 import os
-# Reset the env paths back to root
-# (This will also modify sys.path to include the site-packages
-# folder of the Python on the system $PATH)
-conda_deactivate()  
-# Re-activate. 
 envname = vim.eval('g:conda_startup_env')
 # Need to get the root "envs" dir in order to build the
 # complete path the to env.
@@ -303,6 +298,11 @@ elif len(roots)==0:
 else:
     root = roots[0]
     envpath = os.path.join(root, envname)
+    # Reset the env paths back to root
+    # (This will also modify sys.path to include the site-packages
+    # folder of the Python on the system $PATH)
+    conda_deactivate()  
+    # Re-activate. 
     conda_activate(envname, envpath, root)
 EOF
 else
