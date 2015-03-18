@@ -374,5 +374,3 @@ command! CondaChangeEnv call s:CondaChangeEnv()
 " https://github.com/davidhalter/jedi-vim/issues/280
 " https://github.com/davidhalter/jedi/issues/385
 " https://github.com/davidhalter/jedi-vim/issues/196
-" 
-"
