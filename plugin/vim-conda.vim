@@ -355,6 +355,13 @@ for key, value in envnames.items():
 
 # Provide the selectable options to the `input()` callback function via
 # a global var: `g:condaenvs`
+# startup_env = vim.eval('g:conda_startup_env') 
+# prefix_dir = os.path.split(startup_env)[-1]
+# prefix_name = '[prefix]' + prefix_dir
+# if vim.eval('conda_startup_was_prefix') == 1:
+#     extra=[prefix_name]
+# else:
+#     extra=[]
 vim.command('let g:condaenvs = "' + '\n'.join(envnames.keys()) + '"')
 # Ask the user to choose a new env
 choice = python_input("Change conda env [current: {}]: ".format(current_env))
