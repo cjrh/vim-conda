@@ -280,6 +280,9 @@ if exists("$CONDA_DEFAULT_ENV")
     " was already activated before launching vim, so we need to make
     " the required changes internally.
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
+    " This may get overridden later if the default env was in fact
+    " a prefix env.
+    let g:conda_startup_was_prefix = 0
 python << EOF
 import os
 envname = vim.eval('g:conda_startup_env')
@@ -293,8 +296,14 @@ if len(roots)>1:
     print ('Found more than one matching env, '
            'this should never happen.')
 elif len(roots)==0:
-    print ('Could not find a matching env in the list, '
-           'this should never happen.')
+    print ('\nCould not find a matching env in the list. '
+           '\nThis probably means that you are using a local '
+           '\n(prefix) Conda env.'
+           '\n '
+           '\nThis should be fine, but changing to a named env '
+           '\nmay make it difficult to reactivate the prefix env.'
+           '\n ')
+    vim.command('let g:conda_startup_was_prefix = 1')
 else:
     root = roots[0]
     envpath = os.path.join(root, envname)
