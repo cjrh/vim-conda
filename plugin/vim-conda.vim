@@ -3,6 +3,10 @@
 " Caleb Hattingh
 " MIT Licence
 
+if !has('python') && !has('python3')
+    finish
+endif
+
 " This is currently hard-coded and is therefore bad. I 
 " need some help figure out how to make it user-defined.
 set wildcharm=<Tab>
