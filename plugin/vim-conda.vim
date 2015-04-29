@@ -25,7 +25,8 @@ def vim_conda_runshell(cmd):
 
 def vim_conda_runpyshell(cmd):
     return check_output('python -c "{}"'.format(cmd), shell=True, 
-        executable=os.getenv('SHELL'))
+        executable=os.getenv('SHELL'),
+        stdin=PIPE, stderr=PIPE)
 
 
 def get_conda_info_dict():
