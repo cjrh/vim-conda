@@ -7,6 +7,7 @@
 " need some help figure out how to make it user-defined.
 set wildcharm=<Tab>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
 # Global code for Python
 from os.path import join, dirname
@@ -89,6 +90,7 @@ def insert_system_py_sitepath():
         if sitedir not in sys.path:
             sys.path.insert(0, sitedir)
 EOF
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:SetCondaPlainPath()
 python << EOF
@@ -127,6 +129,7 @@ vim.command("let l:temppath = '" + path + "'")
 EOF
 return l:temppath
 endfunction
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 function! s:CondaActivate(envname, envpath, envsroot)
@@ -168,6 +171,7 @@ if 'CONDA_DEFAULT_ENV' in os.environ:
 os.environ['PATH'] = vim.eval('$PATH')
 EOF
 endfunction
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 function! Conda_env_input_callback(A,L,P)
@@ -189,6 +193,7 @@ if !exists("g:conda_startup_path")
     let g:conda_plain_path = s:SetCondaPlainPath()
     " Load all the required Python stuff at startup. These functions 
     " get called from other places.
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
 import vim
 import sys
@@ -273,6 +278,7 @@ def conda_deactivate():
 
 EOF
 endif
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 " Setting global paths - We use these to switch between conda envs.
@@ -284,6 +290,7 @@ if exists("$CONDA_DEFAULT_ENV")
     " This may get overridden later if the default env was in fact
     " a prefix env.
     let g:conda_startup_was_prefix = 0
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
 import os
 envname = vim.eval('g:conda_startup_env')
@@ -315,12 +322,15 @@ else:
     # Re-activate. 
     conda_activate(envname, envpath, root)
 EOF
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 else
     let g:conda_startup_env = ""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
 insert_system_py_sitepath()
 EOF
 end
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 function! s:CondaChangeEnv()
@@ -381,6 +391,7 @@ else:
 vim.command('redraw')
 EOF
 endfunction
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 command! CondaChangeEnv call s:CondaChangeEnv()
 
