@@ -68,3 +68,12 @@ The `CondaChangeEnv` command will trigger wildmode allowing you to tab through t
 - The `$PATH` variable is set to be the selected Conda env, plus the associated `/Scripts` folder, as per the usual way the `activate` script supplied by Conda would modify the path. Note that the `$PATH` environment variable *inside the running Vim process* is modified.
 - The `sys.path` list of the **embedded Python instance** inside the running Vim process is modified to include the entries for the selected Conda env.  This is done so that the Jedi-Vim package will automatically be able to perform code completion within the selected env.
 
+# Notes
+
+While testing, I found that I needed the following settings in my `vimrc` in order to suppress some errors related to other packages:
+
+```vim
+let g:jedi#force_py_version = 2
+let g:UltisnipsUsePythonVersion = 2
+```
+More testing is needed to make sure that all the configurations work.
