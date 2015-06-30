@@ -78,6 +78,8 @@ def get_conda_info_dict():
 def insert_system_py_sitepath():
     """ Add the system $PATH Python's site-packages folders to the
     embedded Python's sys.path. This is for Jedi-vim code completion. """
+    """ TODO: Under virtualenv, `site` does not have a `getsitepackages()`
+    function!"""
     cmd = "import site, sys, os; sys.stdout.write(os.path.pathsep.join(site.getsitepackages()))"
     sitedirs = vim_conda_runpyshell(cmd).split(os.path.pathsep)
     # The following causes errors. Jedi vim imports e.g. hashlib
