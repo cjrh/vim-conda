@@ -1,6 +1,8 @@
 
 # vim-conda
 
+[![Join the chat at https://gitter.im/cjrh/vim-conda](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cjrh/vim-conda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a [Vim](http://www.vim.org/) plugin to support [Python](https://www.python.org/) development using the [Conda](http://conda.pydata.org/docs/) environment manager.
 
 
