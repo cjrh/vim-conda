@@ -3,7 +3,7 @@
 " Caleb Hattingh
 " MIT Licence
 
-" This is currently hard-coded and is therefore bad. I 
+" This is currently hard-coded and is therefore bad. I
 " need some help figure out how to make it user-defined.
 set wildcharm=<Tab>
 
@@ -25,7 +25,7 @@ def vim_conda_runshell(cmd):
 
 
 def vim_conda_runpyshell(cmd):
-    return check_output('python -c "{}"'.format(cmd), shell=True, 
+    return check_output('python -c "{}"'.format(cmd), shell=True,
         executable=os.getenv('SHELL'),
         stdin=PIPE, stderr=PIPE)
 
@@ -34,38 +34,38 @@ def get_conda_info_dict():
     """ Example output:
     {
       "channels": [
-        "http://repo.continuum.io/pkgs/free/osx-64/", 
-        "http://repo.continuum.io/pkgs/free/noarch/", 
-        "http://repo.continuum.io/pkgs/pro/osx-64/", 
+        "http://repo.continuum.io/pkgs/free/osx-64/",
+        "http://repo.continuum.io/pkgs/free/noarch/",
+        "http://repo.continuum.io/pkgs/pro/osx-64/",
         "http://repo.continuum.io/pkgs/pro/noarch/"
-      ], 
-      "conda_build_version": "1.1.0", 
-      "conda_version": "3.9.0", 
-      "default_prefix": "/Users/calebhattingh/anaconda", 
+      ],
+      "conda_build_version": "1.1.0",
+      "conda_version": "3.9.0",
+      "default_prefix": "/Users/calebhattingh/anaconda",
       "envs": [
-        "/Users/calebhattingh/anaconda/envs/django3", 
-        "/Users/calebhattingh/anaconda/envs/falcontest", 
-        "/Users/calebhattingh/anaconda/envs/misutesting", 
-        "/Users/calebhattingh/anaconda/envs/partito", 
-        "/Users/calebhattingh/anaconda/envs/py26", 
-        "/Users/calebhattingh/anaconda/envs/py27", 
-        "/Users/calebhattingh/anaconda/envs/py3", 
+        "/Users/calebhattingh/anaconda/envs/django3",
+        "/Users/calebhattingh/anaconda/envs/falcontest",
+        "/Users/calebhattingh/anaconda/envs/misutesting",
+        "/Users/calebhattingh/anaconda/envs/partito",
+        "/Users/calebhattingh/anaconda/envs/py26",
+        "/Users/calebhattingh/anaconda/envs/py27",
+        "/Users/calebhattingh/anaconda/envs/py3",
         "/Users/calebhattingh/anaconda/envs/py34"
-      ], 
+      ],
       "envs_dirs": [
         "/Users/calebhattingh/anaconda/envs"
-      ], 
-      "is_foreign": false, 
+      ],
+      "is_foreign": false,
       "pkgs_dirs": [
         "/Users/calebhattingh/anaconda/pkgs"
-      ], 
-      "platform": "osx-64", 
-      "python_version": "2.7.9.final.0", 
-      "rc_path": null, 
-      "requests_version": "2.5.1", 
-      "root_prefix": "/Users/calebhattingh/anaconda", 
-      "root_writable": true, 
-      "sys_rc_path": "/Users/calebhattingh/anaconda/.condarc", 
+      ],
+      "platform": "osx-64",
+      "python_version": "2.7.9.final.0",
+      "rc_path": null,
+      "requests_version": "2.5.1",
+      "root_prefix": "/Users/calebhattingh/anaconda",
+      "root_writable": true,
+      "sys_rc_path": "/Users/calebhattingh/anaconda/.condarc",
       "user_rc_path": "/Users/calebhattingh/.condarc"
     }
     """
@@ -99,7 +99,7 @@ import subprocess
 import json
 # This is quite deceiving. `os.environ` loads only a single time,
 # when the os module is first loaded. With this embedded-vim
-# Python, that means only one time. If we want to have an 
+# Python, that means only one time. If we want to have an
 # up-to-date version of the environment, we'll have to use
 # Vim's $VAR variables and rather act on that.
 # TODO: Fix use of py getenv
@@ -109,9 +109,9 @@ if not conda_default_env:
     pass
 else:
     # We appear to be inside a conda env already. We want the path
-    # that we would have WITHOUT being in a conda env, e.g. what 
+    # that we would have WITHOUT being in a conda env, e.g. what
     # we'd get if `deactivate` was run.
-    output = subprocess.check_output('conda info --json', 
+    output = subprocess.check_output('conda info --json',
         shell=True, executable=os.getenv('SHELL'),
         # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
         # When launching gvim.exe from a CMD shell. (gvim from icon seems
@@ -123,7 +123,7 @@ else:
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
     # TODO Check whether the generator comprehension also works.
-    path = os.pathsep.join([x for x in path.split(os.pathsep) 
+    path = os.pathsep.join([x for x in path.split(os.pathsep)
                                 if d['default_prefix'] not in x])
 vim.command("let l:temppath = '" + path + "'")
 EOF
@@ -152,6 +152,7 @@ EOF
 endfunction
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! s:CondaDeactivate()
     " Reset $PATH back to what it was at startup, and unset $CONDA_DEFAULT_ENV
     " TODO: Maybe deactivate should really give us `g:conda_plain_path`?
@@ -176,11 +177,15 @@ endfunction
 
 function! Conda_env_input_callback(A,L,P)
     " This is the callback for the `input()` function.
-    " g:condaenvs will be assigned values inside `s:CondaChangeEnv()` 
+    " g:condaenvs will be assigned values inside `s:CondaChangeEnv()`
     return g:condaenvs
 endfunction
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+" STARTUP
+"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " This only runs when the script loads
 if !exists("g:conda_startup_path")
@@ -191,7 +196,7 @@ if !exists("g:conda_startup_path")
     " carrying around any startup baggage in $PATH, if vim was started
     " from a terminal that already had a conda env activated.
     let g:conda_plain_path = s:SetCondaPlainPath()
-    " Load all the required Python stuff at startup. These functions 
+    " Load all the required Python stuff at startup. These functions
     " get called from other places.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
@@ -216,7 +221,7 @@ def obtain_sys_path_from_env(env_path):
     """ Obtain sys.path for the selected python bin folder.
     The given `env_path` should just be the folder, not including
     the python binary. That gets added here.
-    
+
     :param str env_path: The folder containing a Python.
     :return: The sys.path of the provided python env folder.
     :rtype: list """
@@ -235,10 +240,10 @@ def conda_activate(env_name, env_path, envs_root):
 
     1. Change environment vars $PATH and $CONDA_DEFAULT_ENV
 
-    2. Change EMBEDDED PYTHON sys.path, for jedi-vim code completion 
-    
+    2. Change EMBEDDED PYTHON sys.path, for jedi-vim code completion
+
     :return: None """
-    # This calls a vim function that will 
+    # This calls a vim function that will
     # change the $PATH and $CONDA_DEFAULT_ENV vars
     vim.command("call s:CondaActivate('{}', '{}', '{}')".format(env_name, env_path, envs_root))
     # Obtain sys.path for the selected conda env
@@ -252,8 +257,8 @@ def conda_activate(env_name, env_path, envs_root):
     # This is what jedi-vim will use for code completion.
     # TODO: There is another way we could do this: instead of a full reset, we could
     # remember what got added, and the reset process could simply remove those
-    # things; this approach would preserve any changes the user makes to 
-    # sys.path inbetween calls to s:CondaChangeEnv()... 
+    # things; this approach would preserve any changes the user makes to
+    # sys.path inbetween calls to s:CondaChangeEnv()...
     # TODO: I found out that not only does jedi-vim modify sys.path for
     # handling VIRTUALENV (which is what we do here), but it also looks like
     # there is a bug in that the same venv path can get added multiple times.
@@ -297,7 +302,7 @@ envname = vim.eval('g:conda_startup_env')
 # Need to get the root "envs" dir in order to build the
 # complete path the to env.
 d = get_conda_info_dict()
-roots = [os.path.dirname(x) for x in d['envs'] 
+roots = [os.path.dirname(x) for x in d['envs']
             if envname == os.path.split(x)[-1]]
 
 if len(roots)>1:
@@ -318,8 +323,8 @@ else:
     # Reset the env paths back to root
     # (This will also modify sys.path to include the site-packages
     # folder of the Python on the system $PATH)
-    conda_deactivate()  
-    # Re-activate. 
+    conda_deactivate()
+    # Re-activate.
     conda_activate(envname, envpath, root)
 EOF
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -336,7 +341,7 @@ end
 function! s:CondaChangeEnv()
 python << EOF
 
-# Obtain conda information. It's great they provide output in 
+# Obtain conda information. It's great they provide output in
 # json format because it's a short trip to a dict.
 import os
 
@@ -366,7 +371,7 @@ for key, value in envnames.items():
 
 # Provide the selectable options to the `input()` callback function via
 # a global var: `g:condaenvs`
-# startup_env = vim.eval('g:conda_startup_env') 
+# startup_env = vim.eval('g:conda_startup_env')
 # prefix_dir = os.path.split(startup_env)[-1]
 # prefix_name = '[prefix]' + prefix_dir
 # if vim.eval('conda_startup_was_prefix') == 1:
