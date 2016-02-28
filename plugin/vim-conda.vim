@@ -95,6 +95,7 @@ EOF
 function! s:SetCondaPlainPath()
 python << EOF
 import os
+import vim
 import subprocess
 import json
 # This is quite deceiving. `os.environ` loads only a single time,
@@ -297,6 +298,7 @@ if exists("$CONDA_DEFAULT_ENV")
     let g:conda_startup_was_prefix = 0
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 python << EOF
+import vim
 import os
 envname = vim.eval('g:conda_startup_env')
 # Need to get the root "envs" dir in order to build the
@@ -343,6 +345,7 @@ python << EOF
 
 # Obtain conda information. It's great they provide output in
 # json format because it's a short trip to a dict.
+import vim
 import os
 
 
