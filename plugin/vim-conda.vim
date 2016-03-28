@@ -1,5 +1,5 @@
 " vim-conda
-" Version: 0.0.0
+" Version: 0.0.1
 " Caleb Hattingh
 " MIT Licence
 
@@ -13,6 +13,7 @@ python << EOF
 from os.path import join, dirname
 from subprocess import check_output, PIPE
 import json
+import vim
 
 def vim_conda_runshell(cmd):
     return check_output(cmd, shell=True, executable=os.getenv('SHELL'),
