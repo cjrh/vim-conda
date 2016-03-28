@@ -14,7 +14,7 @@ Plugin 'cjrh/vim-conda'
 
 _Edit: Vundle is no longer the recommended way!_
 
-I much prefer [vim-plug](https://github.com/junegunn/vim-plug) which works in a similar to Vundle, but seem just generally better all round. To add vim-conda,
+I much prefer [vim-plug](https://github.com/junegunn/vim-plug) which works in a similar way to Vundle, but seem just generally better all round. To add vim-conda,
 you need this:
 ```
 Plug 'cjrh/vim-conda'
