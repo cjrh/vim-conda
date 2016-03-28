@@ -12,6 +12,15 @@ Install
 Plugin 'cjrh/vim-conda'
 ```
 
+_Edit: Vundle is no longer the recommended way!_
+
+I much prefer [vim-plug](https://github.com/junegunn/vim-plug) which works in a similar to Vundle, but seem just generally better all round. To add vim-conda,
+you need this:
+```
+Plug 'cjrh/vim-conda'
+```
+
+
 Super-short summary
 -------------------
 When developing Python with Vim, there are *two* Pythons of interest:
@@ -34,7 +43,7 @@ Demo
 Introduction
 ------------
 
-The Vim editor can be used to develop Python code. One popular workflow is to edit the text of a code module (e.g. a `.py` file), and then execute the code with a shell command, such as 
+The Vim editor can be used to develop Python code. One popular workflow is to edit the text of a code module (e.g. a `.py` file), and then execute the code with a shell command, such as
 ```
 :!python %
 ```
@@ -62,7 +71,7 @@ Likewise, when you change from one environment to another, the change is clean i
 Details
 -------
 
-The `CondaChangeEnv` command will trigger wildmode allowing you to tab through the existing Conda environments on your system. When an environment is selected, the following happens: 
+The `CondaChangeEnv` command will trigger wildmode allowing you to tab through the existing Conda environments on your system. When an environment is selected, the following happens:
 
 - A new environment variable called `$CONDA_DEFAULT_ENV` is created *inside the running Vim process*
 - The `$PATH` variable is set to be the selected Conda env, plus the associated `/Scripts` folder, as per the usual way the `activate` script supplied by Conda would modify the path. Note that the `$PATH` environment variable *inside the running Vim process* is modified.
