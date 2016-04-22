@@ -138,7 +138,7 @@ function! s:CondaActivate(envname, envpath, envsroot)
     " Set environment variables $PATH and $CONDA_DEFAULT_ENV
     let $CONDA_DEFAULT_ENV = a:envname
     if has("win32") || has("win64")
-        let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . g:conda_plain_path
+        let $PATH = a:envpath . ';' . a:envpath . '\Scripts' .';' . a:envpath . '\Library\bin' .';' . g:conda_plain_path
     elseif has("unix")
         let $PATH = a:envpath . '/bin' .  ':' . g:conda_plain_path
     endif
