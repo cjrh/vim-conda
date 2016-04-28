@@ -99,6 +99,7 @@ import os
 import vim
 import subprocess
 import json
+import vim
 # This is quite deceiving. `os.environ` loads only a single time,
 # when the os module is first loaded. With this embedded-vim
 # Python, that means only one time. If we want to have an
