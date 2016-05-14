@@ -17,6 +17,12 @@ import json
 import vim
 import sys
 
+def to_unicode(text):
+    if sys.version_info.major >= 3:
+            text = text.decode('utf-8')
+    return text
+
+
 def vim_conda_runshell(cmd):
     output = check_output(cmd, shell=True, executable=os.getenv('SHELL'),
         # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
@@ -25,8 +31,7 @@ def vim_conda_runshell(cmd):
         # See also: http://bugs.python.org/issue3905
         # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdin=PIPE, stderr=PIPE)
-    if sys.version_info.major >= 3:
-            output = output.decode('utf-8')
+    output = to_unicode(output)
     return output
 
 
@@ -35,8 +40,7 @@ def vim_conda_runpyshell(cmd):
     output = check_output('python -c "{}"'.format(cmd), shell=True,
         executable=os.getenv('SHELL'),
         stdin=PIPE, stderr=PIPE)
-    if sys.version_info.major >= 3:
-            output = output.decode('utf-8')
+    output = to_unicode(output)
     return output
 
 
@@ -133,8 +137,7 @@ else:
         # See also: http://bugs.python.org/issue3905
         # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-    if sys.version_info.major >= 3:
-            output = output.decode('utf-8')
+    output = to_unicode(output)
     d = json.loads(output)
     # We store the path variable we get if we filter out all the paths
     # that match the current conda "default_prefix".
@@ -246,8 +249,7 @@ def obtain_sys_path_from_env(env_path):
     cmd = pyexe + args
     syspath_output = subprocess.check_output(cmd, shell=True,
         executable=os.getenv('SHELL'))
-    if sys.version_info.major >= 3:
-            syspath_output = syspath_output.decode('utf-8')
+    syspath_output = to_unicode(syspath_output)
     # Use json to convert the fetched sys.path cmdline output to a list
     return json.loads(syspath_output)
 
