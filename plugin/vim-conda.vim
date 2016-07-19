@@ -268,7 +268,8 @@ def conda_activate(env_name, env_path, envs_root):
     # So it looks like the best policy for now is to continue with the
     # current design.
     sys.path = new_paths + _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
-    print 'Activated env: {}'.format(env_name)
+    if not msg_suppress:
+        print 'Activated env: {}'.format(env_name)
 
 
 def conda_deactivate():
@@ -282,7 +283,8 @@ def conda_deactivate():
     # The system python path may not already be part of
     # the embedded Python's sys.path. This fn will check.
     insert_system_py_sitepath()
-    print 'Conda env deactivated.'
+    if not msg_suppress:
+        print 'Conda env deactivated.'
 
 EOF
 endif
@@ -303,6 +305,9 @@ python << EOF
 import vim
 import os
 envname = vim.eval('g:conda_startup_env')
+msg_suppress = int(vim.eval('exists("g:conda_startup_msg_suppress")'))
+if msg_suppress:
+    msg_suppress = int(vim.eval('g:conda_startup_msg_suppress'))
 # Need to get the root "envs" dir in order to build the
 # complete path the to env.
 d = get_conda_info_dict()
