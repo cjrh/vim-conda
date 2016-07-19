@@ -269,7 +269,7 @@ def conda_activate(env_name, env_path, envs_root):
     # current design.
     sys.path = new_paths + _conda_py_globals['reset_sys_path']   # Modify sys.path for Jedi completion
     if not msg_suppress:
-        print 'Activated env: {}'.format(env_name)
+        print('Activated env: {}'.format(env_name))
 
 
 def conda_deactivate():
@@ -284,7 +284,7 @@ def conda_deactivate():
     # the embedded Python's sys.path. This fn will check.
     insert_system_py_sitepath()
     if not msg_suppress:
-        print 'Conda env deactivated.'
+        print('Conda env deactivated.')
 
 EOF
 endif
