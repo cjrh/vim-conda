@@ -88,3 +88,18 @@ let g:jedi#force_py_version = 2
 let g:UltisnipsUsePythonVersion = 2
 ```
 More testing is needed to make sure that all the configurations work.
+
+
+In order to suppress the message of vim-conda environment information on vim startup - add the variable in the 'vimrc' file.
+
+```vim
+let g:conda_startup_msg_suppress = 1
+```
+
+In order to keep the message of vim-conda environment information on vim startup - you can either comment out the above variable or add the below variable in the 'vimrc' file.
+
+```vim
+let g:conda_startup_msg_suppress = 0
+```
+
+
