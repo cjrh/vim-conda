@@ -375,9 +375,10 @@ default_prefix = d['default_prefix']
 for key, value in envnames.items():
     if value == default_prefix:
         current_env = key
-        # Don't provide current_env as an option for user
-        del envnames[key]
-
+        break
+# Don't provide current_env as an option for user
+if current_env in envnames:
+    del envnames[current_env]
 
 # Provide the selectable options to the `input()` callback function via
 # a global var: `g:condaenvs`
