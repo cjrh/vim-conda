@@ -27,15 +27,15 @@ Super-short summary
 -------------------
 When developing Python with Vim, there are *two* Pythons of interest:
 
-0. The one that executes your code in a shell command, i.e. `:!python %`
-0. The (embedded in Vim) one that `jedi-vim` uses to provide code completion.
+1. The one that executes your code in a shell command, i.e. `:!python %`
+1. The (embedded in Vim) one that `jedi-vim` uses to provide code completion.
 
 Conda is concerned with the first one, i.e. the "shell Python".  The second one depends on how you have Vim set up with respect to its own Python scripting support.
 
 This plugin provides a command, `CondaChangeEnv`, that will
 
-0. Change the `$PATH` and `$CONDA_DEFAULT_ENV` environment variables *inside* the Vim process, so that new launched processes will have the same environment as if they were launched from a Conda env.
-0. Change the *embedded Python sys.path* inside Vim so that tools like `jedi-vim` will provide code completion for the selected env.
+1. Change the `$PATH` and `$CONDA_DEFAULT_ENV` environment variables *inside* the Vim process, so that new launched processes will have the same environment as if they were launched from a Conda env.
+1. Change the *embedded Python sys.path* inside Vim so that tools like `jedi-vim` will provide code completion for the selected env.
 
 Demo
 ----
