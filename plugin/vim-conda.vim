@@ -8,27 +8,31 @@
 set wildcharm=<Tab>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-python << EOF
-# Global code for Python
-from os.path import join, dirname
+" Global code for Python
+python3 << EOF
+import os
+from os.path import join, dirname #, normpath
 from subprocess import check_output, PIPE
 import json
 import vim
 
 def vim_conda_runshell(cmd):
+    """ Run external shell command """
     return check_output(cmd, shell=True, executable=os.getenv('SHELL'),
-        # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
-        # When launching gvim.exe from a CMD shell. (gvim from icon seems
-        # fine!?)
-        # See also: http://bugs.python.org/issue3905
-        # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdin=PIPE, stderr=PIPE)
+                        # Needed to avoid "WindowsError: [Error 6] The handle
+                        # is invalid" When launching gvim.exe from a CMD shell.
+                        # (gvim from icon seems fine!?) See also:
+                        # http://bugs.python.org/issue3905
+                        # stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                        # stderr=subprocess.PIPE)
+                        stdin=PIPE, stderr=PIPE)
 
 
 def vim_conda_runpyshell(cmd):
+    """ Run python external python command """
     return check_output('python -c "{}"'.format(cmd), shell=True,
-        executable=os.getenv('SHELL'),
-        stdin=PIPE, stderr=PIPE)
+                        executable=os.getenv('SHELL'),
+                        stdin=PIPE, stderr=PIPE)
 
 
 def get_conda_info_dict():
@@ -77,16 +81,15 @@ def get_conda_info_dict():
 def insert_system_py_sitepath():
     """ Add the system $PATH Python's site-packages folders to the
     embedded Python's sys.path. This is for Jedi-vim code completion. """
+    import os
     cmd = "import site, sys, os; sys.stdout.write(os.path.pathsep.join(site.getsitepackages()))"
-    sitedirs = vim_conda_runpyshell(cmd).split(os.path.pathsep)
+    #sitedirs = str(vim_conda_runpyshell(cmd)).split(os.path.pathsep)
+    sitedirs = vim_conda_runpyshell(cmd).decode()
+    sitedirs = sitedirs.split(os.path.pathsep)
     # The following causes errors. Jedi vim imports e.g. hashlib
     # from the stdlib, but it we've added a different stdlib to the
     # embedded sys.path, jedi loads the wrong one, causing errs.
     # Looks like we should only load site-packages.
-    # if len(sitedirs) > 0:
-    #     libdir = os.path.dirname(sitedirs[0])
-    #     if libdir not in sys.path:
-    #         sys.path.insert(0, libdir)
     for sitedir in sitedirs:
         if sitedir not in sys.path:
             sys.path.insert(0, sitedir)
@@ -94,7 +97,7 @@ EOF
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:SetCondaPlainPath()
-python << EOF
+python3 << EOF
 import os
 import vim
 import subprocess
@@ -143,7 +146,7 @@ function! s:CondaActivate(envname, envpath, envsroot)
     elseif has("unix")
         let $PATH = a:envpath . '/bin' .  ':' . g:conda_plain_path
     endif
-python << EOF
+python3 << EOF
 import os
 import vim
 # It turns out that `os.environ` is loaded only once. Therefore it
@@ -163,7 +166,7 @@ function! s:CondaDeactivate()
     "       from inside a conda env..
     let $CONDA_DEFAULT_ENV = g:conda_startup_env
     let $PATH = g:conda_startup_path
-python << EOF
+python3 << EOF
 import os
 import vim
 # It turns out that `os.environ` is loaded only once. Therefore it
@@ -202,7 +205,7 @@ if !exists("g:conda_startup_path")
     " Load all the required Python stuff at startup. These functions
     " get called from other places.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-python << EOF
+python3 << EOF
 import vim
 import sys
 import os
@@ -292,6 +295,11 @@ endif
 
 
 " Setting global paths - We use these to switch between conda envs.
+python3 << EOF
+msg_suppress = int(vim.eval('exists("g:conda_startup_msg_suppress")'))
+if msg_suppress:
+    msg_suppress = int(vim.eval('g:conda_startup_msg_suppress'))
+EOF
 if exists("$CONDA_DEFAULT_ENV")
     " This is happening at script startup. It looks like a conda env
     " was already activated before launching vim, so we need to make
@@ -301,13 +309,10 @@ if exists("$CONDA_DEFAULT_ENV")
     " a prefix env.
     let g:conda_startup_was_prefix = 0
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-python << EOF
+python3 << EOF
 import vim
 import os
 envname = vim.eval('g:conda_startup_env')
-msg_suppress = int(vim.eval('exists("g:conda_startup_msg_suppress")'))
-if msg_suppress:
-    msg_suppress = int(vim.eval('g:conda_startup_msg_suppress'))
 # Need to get the root "envs" dir in order to build the
 # complete path the to env.
 d = get_conda_info_dict()
@@ -340,7 +345,7 @@ EOF
 else
     let g:conda_startup_env = ""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-python << EOF
+python3 << EOF
 insert_system_py_sitepath()
 EOF
 end
@@ -348,7 +353,7 @@ end
 
 
 function! s:CondaChangeEnv()
-python << EOF
+python3 << EOF
 
 # Obtain conda information. It's great they provide output in
 # json format because it's a short trip to a dict.
@@ -365,7 +370,8 @@ d = get_conda_info_dict()
 # the annoying `u""` unicode prefixes. There is likely a better way to
 # do this. Help would be appreciated.
 # keys = [os.path.basename(e).decode().encode('ascii') for e in d['envs']]
-keys = [os.path.basename(e).encode('utf-8') for e in d['envs']]
+#keys = [os.path.basename(e).encode('utf-8') for e in d['envs']]
+keys = [os.path.basename(e) for e in d['envs']]
 # Create the mapping {envname: envdir}
 envnames = dict(zip(keys, d['envs']))
 # Add the root as an option (so selecting `root` will trigger a deactivation
