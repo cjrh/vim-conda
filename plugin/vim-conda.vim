@@ -1,6 +1,7 @@
 " vim-conda
-" Version: 0.0.1
+" Version: 0.0.2
 " Caleb Hattingh
+" Revised by John D. Fisher
 " MIT Licence
 
 " This is currently hard-coded and is therefore bad. I
@@ -11,6 +12,12 @@ set wildcharm=<Tab>
 " Use python3 or python depending on which is in $PATH for when vim is
 " compiled with dynamic python.
 " from http://stackoverflow.com/questions/8805247/compatible-way-to-use-either-py-or-py3-in-vim
+" Doesn't work very well for dynamic python since both will show true but only
+" one will work for a given session.
+" Vim's python's will not switch dll's to match the conda env selected.
+" If started from other than root env, Vim will not find the python dll unless
+" Vim is started from the directory in which the dll resides.  This is
+" probably a python dynamic issue but haven't tested with a static version.
 " TODO: Don't know good way to test for python version without activating it,
 " which means the other one won't run. Doesn't prevent switching back and
 " forth between python2 and python3 since default python remains at end of
@@ -30,6 +37,7 @@ endif
 " Global code for Python
 "Python import vimconda
 " Add the plugin directory to sys.path for import vimconda
+Python import vim
 Python if vim.eval('expand("<sfile>:p:h")') not in sys.path: sys.path.append(vim.eval('expand("<sfile>:p:h")'))
 Python import vimconda
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
