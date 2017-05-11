@@ -1,6 +1,8 @@
 
 # vim-conda
 
+[![Join the chat at https://gitter.im/cjrh/vim-conda](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cjrh/vim-conda?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a [Vim](http://www.vim.org/) plugin to support [Python](https://www.python.org/) development using the [Conda](http://conda.pydata.org/docs/) environment manager.
 
 **NOTE for Neovim users**: If Neovim finds `python` on your `$PATH`, it assumes this is Python 2 (and likewise for `python3` being treated as Python 3). If you start Neovim from a shell with an activated Conda env that uses _Python 3_, you're going to have problems because the conda env exposes a binary called `python`, but which is really 3 and not 2. Because of this, you will have to use the Neovim option of setting `g:python_host_prog` to point to a valid Python 2, into which you must also have pip installed the required neovim client.
