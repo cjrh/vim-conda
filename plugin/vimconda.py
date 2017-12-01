@@ -17,9 +17,6 @@ import copy
 import json
 import os
 import sys
-# TODO: Refactor to use from subprocess in functions. Currently mix of
-# both
-import subprocess
 import vim
 
 
@@ -48,7 +45,7 @@ def obtain_sys_path_from_env(env_path):
     pyexe = os.path.join(env_path, 'python')
     args = ' -c "import sys, json; sys.stdout.write(json.dumps(sys.path))"'
     cmd = pyexe + args
-    syspath_output = subprocess.check_output(cmd, shell=True, executable=os.getenv('SHELL')).decode('utf-8')
+    syspath_output = check_output(cmd, shell=True, executable=os.getenv('SHELL')).decode('utf-8')
     # Use json to convert the fetched sys.path cmdline output to a list
     return json.loads(syspath_output)
 
@@ -198,16 +195,16 @@ def setcondaplainpath():
         # We appear to be inside a conda env already. We want the path
         # that we would have WITHOUT being in a conda env, e.g. what
         # we'd get if `deactivate` was run.
-        output = subprocess.check_output('conda info --json',
-                                         shell=True,
-                                         executable=os.getenv('SHELL'),
-                                         # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
-                                         # When launching gvim.exe from a CMD shell. (gvim from icon seems
-                                         # fine!?)
-                                         # See also: http://bugs.python.org/issue3905
-                                         # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                                         stdin=subprocess.PIPE,
-                                         stderr=subprocess.PIPE).decode('utf-8')
+        output = check_output('conda info --json',
+                              shell=True,
+                              executable=os.getenv('SHELL'),
+                              # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
+                              # When launching gvim.exe from a CMD shell. (gvim from icon seems
+                              # fine!?)
+                              # See also: http://bugs.python.org/issue3905
+                              # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                              stdin=PIPE,
+                              stderr=PIPE).decode('utf-8')
         d = json.loads(output)
         # We store the path variable we get if we filter out all the paths
         # that match the current conda "default_prefix".
