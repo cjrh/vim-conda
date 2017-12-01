@@ -1,9 +1,7 @@
-"""
-Global code for Python
+""" Global code for Python
 
 Written in python3 but should run in python2 based on Writing Python 2-3
-compatible code at http://python-future.org/compatible_idioms.html
-"""
+compatible code at http://python-future.org/compatible_idioms.html """
 # vim-conda
 # Version: 0.0.2
 # Caleb Hattingh
@@ -88,7 +86,6 @@ def obtain_sys_path_from_env(env_path):
     args = ' -c "import sys, json; sys.stdout.write(json.dumps(sys.path))"'
     cmd = pyexe + args
     syspath_output = vim_conda_runshell(cmd)
-    # Use json to convert the fetched sys.path cmdline output to a list
     return json.loads(syspath_output)
 
 
