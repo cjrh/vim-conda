@@ -1,5 +1,5 @@
-""" Global code for Python 
-    
+""" Global code for Python
+
     Written in python3 but should run in python2 based on Writing Python 2-3
     compatible code at http://python-future.org/compatible_idioms.html """
 # vim-conda
@@ -11,7 +11,6 @@
 # For Python2 compatibility
 from __future__ import print_function
 
-from os.path import join, dirname #, normpath
 from subprocess import check_output, PIPE
 
 import copy
@@ -24,14 +23,14 @@ import subprocess
 import vim
 
 
-
 _conda_py_globals = dict(reset_sys_path=copy.copy(sys.path))  # Mutable global container
 
 msg_suppress = int(vim.eval('exists("g:conda_startup_msg_suppress")'))
 if msg_suppress:
     msg_suppress = int(vim.eval('g:conda_startup_msg_suppress'))
 
-def python_input(message = 'input'):
+
+def python_input(message='input'):
     vim.command('call inputsave()')
     vim.command("let user_input = input('" + message + "', '	', 'custom,Conda_env_input_callback')")
     vim.command('call inputrestore()')
@@ -49,9 +48,7 @@ def obtain_sys_path_from_env(env_path):
     pyexe = os.path.join(env_path, 'python')
     args = ' -c "import sys, json; sys.stdout.write(json.dumps(sys.path))"'
     cmd = pyexe + args
-    syspath_output = subprocess.check_output(cmd, shell=True,
-                                             executable=os.getenv('SHELL'))\
-                                             .decode('utf-8')
+    syspath_output = subprocess.check_output(cmd, shell=True, executable=os.getenv('SHELL')).decode('utf-8')
     # Use json to convert the fetched sys.path cmdline output to a list
     return json.loads(syspath_output)
 
@@ -104,6 +101,7 @@ def conda_deactivate():
     insert_system_py_sitepath()
     if not msg_suppress:
         print('Conda env deactivated.')
+
 
 def vim_conda_runshell(cmd):
     """ Run external shell command """
@@ -170,7 +168,6 @@ def get_conda_info_dict():
 def insert_system_py_sitepath():
     """ Add the system $PATH Python's site-packages folders to the
     embedded Python's sys.path. This is for Jedi-vim code completion. """
-    #import os
     cmd = "import site, sys, os; sys.stdout.write(os.path.pathsep.join(site.getsitepackages()))"
     sitedirs = vim_conda_runpyshell(cmd)
     sitedirs = sitedirs.split(os.path.pathsep)
@@ -182,11 +179,11 @@ def insert_system_py_sitepath():
         if sitedir not in sys.path:
             sys.path.insert(0, sitedir)
 
+
 def setcondaplainpath():
     """ function! s:SetCondaPlainPath()
 
     :return: None """
-    #import subprocess
     # This is quite deceiving. `os.environ` loads only a single time,
     # when the os module is first loaded. With this embedded-vim
     # Python, that means only one time. If we want to have an
@@ -204,11 +201,11 @@ def setcondaplainpath():
         output = subprocess.check_output('conda info --json',
                                          shell=True,
                                          executable=os.getenv('SHELL'),
-            # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
-            # When launching gvim.exe from a CMD shell. (gvim from icon seems
-            # fine!?)
-            # See also: http://bugs.python.org/issue3905
-            # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                         # Needed to avoid "WindowsError: [Error 6] The handle is invalid"
+                                         # When launching gvim.exe from a CMD shell. (gvim from icon seems
+                                         # fine!?)
+                                         # See also: http://bugs.python.org/issue3905
+                                         # stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                                          stdin=subprocess.PIPE,
                                          stderr=subprocess.PIPE).decode('utf-8')
         d = json.loads(output)
@@ -219,20 +216,18 @@ def setcondaplainpath():
                                 if d['default_prefix'] not in x])
     vim.command("let l:temppath = '" + path + "'")
 
+
 def condaactivate():
     """ function! s:CondaActivate(envname, envpath, envsroot) """
-    #import os
-    #import vim
     # It turns out that `os.environ` is loaded only once. Therefore it
     # doesn't see the changes we just made above to the vim process env,
     # and so we will need to set these
     os.environ['CONDA_DEFAULT_ENV'] = vim.eval('a:envname')
     os.environ['PATH'] = vim.eval('$PATH')
 
+
 def condadeactivate():
     """ function! s:CondaDeactivate() """
-    #import os
-    #import vim
     # It turns out that `os.environ` is loaded only once. Therefore it
     # doesn't see the changes we just made above to the vim process env,
     # and so we will need to update the embedded Python's version of
@@ -241,6 +236,7 @@ def condadeactivate():
         del os.environ['CONDA_DEFAULT_ENV']
     os.environ['PATH'] = vim.eval('$PATH')
 
+
 def conda_startup_env():
     """ Get conda startup env
 
@@ -248,8 +244,6 @@ def conda_startup_env():
      was already activated before launching vim, so we need to make
      the required changes internally.
      """
-    #import vim
-    #import os
     envname = vim.eval('g:conda_startup_env')
     # Need to get the root "envs" dir in order to build the
     # complete path the to env.
@@ -279,14 +273,13 @@ def conda_startup_env():
         # Re-activate.
         conda_activate(envname, envpath, root)
 
+
 def conda_change_env():
     """ Obtain conda information.
-    
+
     It's great they provide output in
     json format because it's a short trip to a dict.
     """
-    #import vim
-    #import os
 
     d = get_conda_info_dict()
 
@@ -296,8 +289,6 @@ def conda_change_env():
     # Note the juggling with decode and encode. This is being done to strip
     # the annoying `u""` unicode prefixes. There is likely a better way to
     # do this. Help would be appreciated.
-    # keys = [os.path.basename(e).decode().encode('ascii') for e in d['envs']]
-    #keys = [os.path.basename(e).encode('utf-8') for e in d['envs']]
     keys = [os.path.basename(e) for e in d['envs']]
     # Create the mapping {envname: envdir}
     envnames = dict(zip(keys, d['envs']))
@@ -326,7 +317,6 @@ def conda_change_env():
     # Ask the user to choose a new env
     choice = python_input("Change conda env [current: {}]: ".format(current_env))
     vim.command('redraw')
-
 
     if choice == 'root':
         conda_deactivate()
