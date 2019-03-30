@@ -328,6 +328,8 @@ def conda_change_env():
     envnames['root'] = root_prefix
     # Detect the currently-selected env. Remove it from the selectable options.
     default_prefix = get_default_prefix()
+    current_env = root_prefix
+
     for key, value in envnames.items():
         if value == default_prefix:
             current_env = key
