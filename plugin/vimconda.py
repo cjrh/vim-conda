@@ -66,6 +66,9 @@ msg_suppress = int(vim.eval('exists("g:conda_startup_msg_suppress")'))
 if msg_suppress:
     msg_suppress = int(vim.eval('g:conda_startup_msg_suppress'))
 
+wrn_suppress = int(vim.eval('exists("g:conda_startup_wrn_suppress")'))
+if wrn_suppress:
+    wrn_suppress = int(vim.eval('g:conda_startup_wrn_suppress'))
 
 def python_input(message='input'):
     vim.command('call inputsave()')
@@ -286,13 +289,14 @@ def conda_startup_env():
         print('Found more than one matching env, '
               'this should never happen.')
     elif len(roots) == 0:
-        print('\nCould not find a matching env in the list. '
-              '\nThis probably means that you are using a local '
-              '\n(prefix) Conda env.'
-              '\n '
-              '\nThis should be fine, but changing to a named env '
-              '\nmay make it difficult to reactivate the prefix env.'
-              '\n ')
+        if not wrn_suppress:
+            print('\nCould not find a matching env in the list. '
+                  '\nThis probably means that you are using a local '
+                  '\n(prefix) Conda env.'
+                  '\n '
+                  '\nThis should be fine, but changing to a named env '
+                  '\nmay make it difficult to reactivate the prefix env.'
+                  '\n ')
         vim.command('let g:conda_startup_was_prefix = 1')
     else:
         root = roots[0]
