@@ -102,4 +102,9 @@ In order to keep the message of vim-conda environment information on vim startup
 let g:conda_startup_msg_suppress = 0
 ```
 
+In order to avoid a warning when opening vim without an environment activated, add the variable in the 'vimrc' file.
+
+```vim
+let g:conda_startup_wrn_suppress = 1
+```
 
