@@ -208,7 +208,7 @@ def get_conda_info_dict():
       "user_rc_path": "/Users/calebhattingh/.condarc"
     }
     """
-    output = vim_conda_runshell('conda info --json')
+    output = vim_conda_runshell('$CONDA_EXE info --json')
     return json.loads(output)
 
 
