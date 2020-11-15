@@ -213,7 +213,7 @@ def get_conda_info_dict():
         return json.loads(output)
     except CalledProcessError:
         cmd = vim_conda_runshell('echo $CONDA_EXE').strip()
-        raise RuntimeError(f"$CONDA_EXE is not set to a valid conda executable ($CONDA_EXE='{cmd}')") from None
+        raise RuntimeError("$CONDA_EXE is not set to a valid conda executable ($CONDA_EXE='{}')".format(cmd)) from None
 
 
 def insert_system_py_sitepath():
