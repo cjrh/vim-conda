@@ -12,7 +12,7 @@ compatible code at http://python-future.org/compatible_idioms.html """
 # For Python2 compatibility
 from __future__ import print_function
 
-from subprocess import check_output, PIPE
+from subprocess import check_output, CalledProcessError, PIPE
 
 import copy
 import json
@@ -208,8 +208,12 @@ def get_conda_info_dict():
       "user_rc_path": "/Users/calebhattingh/.condarc"
     }
     """
-    output = vim_conda_runshell('$CONDA_EXE info --json')
-    return json.loads(output)
+    try:
+        output = vim_conda_runshell('$CONDA_EXE info --json')
+        return json.loads(output)
+    except CalledProcessError:
+        cmd = vim_conda_runshell('echo $CONDA_EXE').strip()
+        raise RuntimeError("$CONDA_EXE is not set to a valid conda executable ($CONDA_EXE='{}')".format(cmd)) from None
 
 
 def insert_system_py_sitepath():
