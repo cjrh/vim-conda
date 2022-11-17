@@ -209,10 +209,11 @@ def get_conda_info_dict():
     }
     """
     try:
-        output = vim_conda_runshell('$CONDA_EXE info --json')
+        conda_exe = os.getenv('CONDA_EXE')
+        output = vim_conda_runshell(conda_exe + ' info --json')
         return json.loads(output)
     except CalledProcessError:
-        cmd = vim_conda_runshell('echo $CONDA_EXE').strip()
+        cmd = vim_conda_runshell('echo ' + conda_exe).strip()
         raise RuntimeError("$CONDA_EXE is not set to a valid conda executable ($CONDA_EXE='{}')".format(cmd)) from None
 
 
