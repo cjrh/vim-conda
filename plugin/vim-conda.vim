@@ -70,8 +70,9 @@ function! s:CondaDeactivate()
     " TODO: Maybe deactivate should really give us `g:conda_plain_path`?
     "       `g:conda_startup_path` would contain env stuff IF vim was started
     "       from inside a conda env..
-    let $CONDA_DEFAULT_ENV = g:conda_startup_env
-    let $PATH = g:conda_startup_path
+    " When you deactivate, you always go back to 'base" environment
+    let $CONDA_DEFAULT_ENV = 'base'
+    let $PATH = g:conda_plain_path
     Python vimconda.condadeactivate()
 endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -108,10 +109,14 @@ endif
 " Setting global paths - We use these to switch between conda envs.
 " Python <<EOF relocated to top of vimconda.py
 if exists("$CONDA_DEFAULT_ENV")
+    " TODO UT: I think that in newer conda $CONDA_DEFAULT_ENV always
+    " exists. In the worst case is just 'base'.
+    " Perhaps in the else branch we could just use a finish. /UT
     " This is happening at script startup. It looks like a conda env
     " was already activated before launching vim, so we need to make
     " the required changes internally.
     let g:conda_startup_env = $CONDA_DEFAULT_ENV
+    echom g:conda_startup_env
     " This may get overridden later if the default env was in fact
     " a prefix env.
     let g:conda_startup_was_prefix = 0
