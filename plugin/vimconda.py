@@ -185,8 +185,8 @@ def vim_conda_runpyshell(cmd):
 
 def get_envs():
     envs = get_conda_info_dict()["envs"]
+    # I cannot find a better idea to add 'base' to the env list
     envs.append(get_root_prefix() + "/base")
-    # return get_conda_info_dict()['envs']
     return envs
 
 
@@ -306,8 +306,6 @@ def condadeactivate():
     # doesn't see the changes we just made above to the vim process env,
     # and so we will need to update the embedded Python's version of
     # `os.environ` manually.
-    # if "CONDA_DEFAULT_ENV" in os.environ:
-        # del os.environ["CONDA_DEFAULT_ENV"]
     os.environ["PATH"] = vim.eval("$PATH")
     os.environ["CONDA_DEFAULT_ENV"] = vim.eval("$CONDA_DEFAULT_ENV")
 
@@ -327,7 +325,6 @@ def conda_startup_env():
         for x in get_envs()
         if envname == os.path.split(x)[-1]
     ]
-
     if len(roots) > 1:
         print("Found more than one matching env, " "this should never happen.")
     elif len(roots) == 0:
@@ -374,7 +371,6 @@ def conda_change_env():
     # Create the mapping {envname: envdir}
     envnames = dict(zip(keys, envs))
     # Add the base as an option (so selecting `base` will trigger a deactivation
-    # envnames['base'] = root_prefix
     # Detect the currently-selected env. Remove it from the selectable options.
     default_prefix = get_default_prefix()
     current_env = root_prefix
