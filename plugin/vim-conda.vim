@@ -70,8 +70,11 @@ function! s:CondaDeactivate()
     " TODO: Maybe deactivate should really give us `g:conda_plain_path`?
     "       `g:conda_startup_path` would contain env stuff IF vim was started
     "       from inside a conda env..
-    let $CONDA_DEFAULT_ENV = g:conda_startup_env
-    let $PATH = g:conda_startup_path
+    " let $CONDA_DEFAULT_ENV = g:conda_startup_env
+    " let $PATH = g:conda_startup_path
+    " When you deactivate, you always go back to 'base" environment
+    let $CONDA_DEFAULT_ENV = 'base'
+    let $PATH = g:conda_plain_path
     Python vimconda.condadeactivate()
 endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
