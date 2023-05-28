@@ -3,7 +3,7 @@
 This project is no longer supported.
 
 You can keep in sending
-PR:s of course, but we encourage you to use [vim-conda-activate](https://github.com/ubaldot/vim-conda-activate) instead.
+PR:s, but we encourage you to use [vim-conda-activate](https://github.com/ubaldot/vim-conda-activate) instead.
 
 Thanks to all the collaborators who took part into this journey. :)
 
