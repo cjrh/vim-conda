@@ -1,3 +1,11 @@
+# Important Notice
+
+This project is no longer supported.
+
+You can keep in sending
+PR:s, but we encourage you to use [vim-conda-activate](https://github.com/ubaldot/vim-conda-activate) instead.
+
+Thanks to all the collaborators who took part into this journey. :)
 
 # vim-conda
 
@@ -107,4 +115,3 @@ In order to avoid a warning when opening vim without an environment activated, a
 ```vim
 let g:conda_startup_wrn_suppress = 1
 ```
-
